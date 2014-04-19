@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DashboardCtrl', function ($scope, $q, Event, Room, Patient, Dose, Prescription, Socket) {
+  .controller('DashboardCtrl', function ($scope, $q, Event, Drug, Room, Patient, Dose, Prescription, Socket) {
     var patientsDeferred = $q.defer();
     var prescriptionsDeferred = $q.defer();
     var dosesDeferred = $q.defer();
     var roomsDeferred = $q.defer();
     var eventsDeferred = $q.defer();
+    var drugsDeferred = $q.defer();
 
     Patient.get({}, function (data) {
       $scope.patients = data;
@@ -28,12 +29,9 @@ angular.module('clientApp')
       roomsDeferred.resolve();
     });
 
-    Event.get({}, function (data) {
-      $scope.events = data;
-      $scope.eventFeed = data;
-      console.log("Events: ")
-      console.log(data);
-      eventsDeferred.resolve();
+    Drug.get({}, function (data) {
+      $scope.drugs = data;
+      drugsDeferred.resolve();
     });
 
     $q.all([
@@ -41,7 +39,7 @@ angular.module('clientApp')
       prescriptionsDeferred.promise,
       dosesDeferred.promise,
       roomsDeferred.promise,
-      eventsDeferred.promise
+      drugsDeferred.promise
     ]).then(function () {
       _.forEach($scope.rooms, function (room) {
         room.number = parseInt(room._id.substr(room._id.length - 2),16) 
@@ -77,11 +75,12 @@ angular.module('clientApp')
         if (!patient.prescriptions) {
           patient.prescriptions = [];
         }
+
+        prescription.drug = $scope.getDrugById(prescription.drug_id);
+
         patient.prescriptions.push(prescription);
       });
-
-      $scope.filledDoses = _.filter($scope.doses, { state: 'Filled'});
-      $scope.unfilledDoses = _.filter($scope.doses, { state: 'Administered'});
+      $scope.administeredDoses = _.filter($scope.doses, { state: 'Administered'});
     });
 
     $scope.getPatientById = function (id) {
@@ -90,6 +89,10 @@ angular.module('clientApp')
 
     $scope.getPrescriptionById = function (id) {
       return _.find($scope.prescriptions, { _id: id });
+    };
+
+    $scope.getDrugById = function (id) {
+      return _.find($scope.drugs, { _id: id });
     };
 
     $scope.activeMode = 'map';
@@ -110,11 +113,15 @@ angular.module('clientApp')
     function eventFeedHandler (resp) {
       var formats = {
         patient: function (data) {
+          data.type = data.type === 'updated' ? 'checked in' : data.type;
           return 'Patient ' + data.first_name + ' ' + data.last_name + ' was ' + data.type;
         },
         dose: function (data) {
           var patient = $scope.getPatientById(data.patient_id);
-          return 'A prescription was filled for ' + patient.first_name + ' ' + patient.last_name;
+          var type = data.state.toLowerCase();
+          var prescription = $scope.getPrescriptionById(data.prescriptions[0]._id);
+          var drug = $scope.getDrugById(prescription.drug_id);
+          return 'A prescription (' + drug.name + ') was ' + type + ' for ' + patient.first_name + ' ' + patient.last_name;
         },
         event: function (data) {
           return 'An event was triggered?';
@@ -124,6 +131,9 @@ angular.module('clientApp')
         },
         prescription: function (data) {
           var patient = $scope.getPatientById(data.patient_id);
+          if (!patient) {
+            return null;
+          }
           return 'A prescription was ' + data.type + ' for ' + patient.first_name + ' ' + patient.last_name;
         },
         room: function(date){

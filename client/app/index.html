@@ -23,8 +23,8 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container">
-      <div class="header clearfix">
+    <div class="header clearfix">
+      <div class="container">
         <ul class="nav nav-pills pull-right">
           <li ng-class="{active: controller === 'DashboardCtrl'}">
             <a ng-href="/">Home</a>
@@ -33,8 +33,11 @@
             <a ng-href="/users">User Management</a>
           </li>
         </ul>
-        <h3 class="text-muted">Medkit Dashboard <span class="glyphicon glyphicon-heart-empty"></span></h3>
+        <h3><span class="glyphicon glyphicon-plus"></span> MEDKIT Dashboard</h3>
       </div>
+    </div>
+
+    <div class="container">
 
       <div ng-view=""></div>
 
@@ -70,6 +73,7 @@
     <script src="scripts/services/Room.js"></script>
     <script src="scripts/services/User.js"></script>
     <script src="scripts/services/Patient.js"></script>
+    <script src="scripts/services/Drug.js"></script>
     <script src="scripts/services/Dose.js"></script>
     <script src="scripts/services/Prescription.js"></script>
     <script src="scripts/services/Event.js"></script>

@@ -1,30 +1,28 @@
 <div class="row">
-  <div class="col-md-3 panel">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span class="glyphicon glyphicon-list"></span> 
         Event Feed
       </div>
       <div class="panel-body events-body">
-        <p ng-repeat="event in eventFeed" class="{{event.model}}">
+        <p ng-repeat="event in eventFeed" ng-if="event.msg" class="{{event.model}}">
           {{event.msg}}
           <span class="event-timestamp">{{event.time}}</span>
         </p>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <span class="glyphicon glyphicon-dashboard"></span> 
-          Statistics
-        </div>
-        <div class="panel-body summary-body">
-          <p><span class="large">{{patients.length}}</span> patients are checked in</p>
-          <p><span class="large">{{filledDoses.length}}</span> prescriptions filled today</p>
-          <p><span class="large">{{unfilledDoses.length}}</span> prescriptions administered today</p>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span class="glyphicon glyphicon-dashboard"></span> 
+        Statistics
+      </div>
+      <div class="panel-body summary-body">
+        <p><span class="large">{{patients.length}}</span> patients are checked in</p>
+        <p><span class="large">{{doses.length}}</span> prescriptions filled today</p>
+        <p><span class="large">{{administeredDoses.length}}</span> prescriptions administered today</p>
 
-        </div>
       </div>
     </div>
   </div>
@@ -253,7 +251,7 @@
                 </p>
                 <p ng-repeat="prescription in patient.prescriptions" class="patient-prescriptions row">
                   <span class="col-md-1"></span>
-                  <span class="col-md-4">Drug: {{prescription.drug_id}}</span>
+                  <span class="col-md-4">{{prescription.drug.name}} ({{prescription.drug.brand}})</span>
                   <span class="col-md-3">Interval: {{prescription.interval}}</span>
                   <span class="col-md-4">Amount: {{prescription.amount}}</span>
                 </p>
