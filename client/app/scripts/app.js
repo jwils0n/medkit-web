@@ -19,10 +19,6 @@ angular
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl'
       })
-      .when('/medications', {
-        templateUrl: 'views/medications.html',
-        controller: 'MedicationsCtrl'
-      })
       .otherwise({
         redirectTo: '/'
       });

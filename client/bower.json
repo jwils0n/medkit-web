@@ -11,7 +11,9 @@
     "angular-resource": "1.2.15",
     "angular-cookies": "1.2.15",
     "angular-sanitize": "1.2.15",
-    "angular-route": "1.2.15"
+    "angular-route": "1.2.15",
+    "socket.io-client": "~0.9.16",
+    "momentjs": "~2.6.0"
   },
   "devDependencies": {
     "angular-mocks": "1.2.15",
