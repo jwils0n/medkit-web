@@ -53,16 +53,24 @@ db.once('open', function callback () {
             console.log(req.params);
             console.log(id);
             Event.broadcast(model.modelName, req.params, "PUT");
-			model.update({_id: id}, req.params, options, function(err, result){
+            var broadcast = Event.broadcast;
+            var params = req.params;
+            model.findById(id, function (err, result) {
+            		var previous = result;
 
-				if(err)
-				{
-					console.log(err);
-				}
+	            	model.update({_id: id}, params, options, function(err, result){
+					if(err)
+					{
+						console.log(err);
+					}
+					params.previous = previous;
+					broadcast(model.modelName, params, "PUT");
+					res.send(200);
+				});	
 
-				
-				res.send(200);
 			});
+
+			
 
 		}
 
@@ -195,7 +203,7 @@ db.once('open', function callback () {
 	var Event = createModel('event', {
 		 event_type: String,
 		 model: String,
-		 tag_id: Number,
+		 tag_id: String,
 		 data: Mixed,
 		 timestamp: Date
 		  });
