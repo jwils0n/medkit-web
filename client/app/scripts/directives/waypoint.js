@@ -16,40 +16,25 @@ angular.module('clientApp')
         $scope.roomTemplate = _.template('id: <%= _id %> </br>  Room: <%= number %> </br> ');
         $scope.occupantTemplate = _.template('Occupant: <%= last_name %>, <%= first_name %> </br> ');
         $scope.departmentTemplate = _.template('Department: <%= department %></br>');
-        $scope.pharmacyTemplate = _.template('Filled Prescriptions: <%= count %></br>');
+        $scope.pharmacyTemplate = _.template('Filled Prescriptions: <%= prescription_count %></br>');
 
-        $scope.getContent = function(point)
-        {
+        $scope.getContent = function(point) {
             var content = $scope.roomTemplate(point);
-            if(point.occupant)
-            {
+            if(point.occupant) {
               content = content.concat($scope.occupantTemplate(point.occupant));
             }
 
-            if(point.department)
-            {
-              console.log("Has Department");
+            if(point.department) {
               content = content.concat($scope.departmentTemplate(point));
 
-              if(point.department == "pharmacy")
-              {
-                 //content = content.concat($scope.pharmacyTemplate(point.prescription_count));
+              if(point.department == "pharmacy") {
+                 content = content.concat($scope.pharmacyTemplate(point));
               }
             }
             return content;
-        }
+        };
 
         $scope.overWaypoint = function (point) {
-          // Room.get({ id: point.room_id }, function (room) {
-          //   console.log(room);
-          // });
-
-          /*
-              Pardon the nasty JQuery. Still learning Angular, and Just needed to get it
-          */
-
-          console.log(point);
-
           $( "#" + point._id).popover({
             content: $scope.getContent(point),
             html: true,
@@ -58,15 +43,6 @@ angular.module('clientApp')
           });
 
           $( "#" + point._id).popover('show');
-
-          //console.log(point);
-          /*console.log($element);
-          $element.popover({
-            content: 'new content'
-          });*/
-          
-
-          //$element.popover('show');
         };
 
         $scope.outWaypoint = function (point) {
