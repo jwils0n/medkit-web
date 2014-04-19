@@ -44,6 +44,7 @@ db.once('open', function callback () {
           
             var id = req.params.id;
             delete req.params.id;
+            delete req.params._id;
 
             console.log("Debug PUT");
             console.log(req.params);
@@ -78,7 +79,11 @@ db.once('open', function callback () {
 		}
 
 		model.routes.post[""] = function (req, res, next) {
-		var obj = new model(req.params).save();
+		console.log("Debug POST");
+        console.log(req.params);
+		var obj = new model(req.params).save(function(err){
+			console.log(err);
+		});
 		io.sockets.emit(model.modelName , {obj: req.params, method: 'POST', model: model.modelName});
 		res.send(200);
 		}
@@ -106,7 +111,7 @@ db.once('open', function callback () {
 		 username: String,
 		 first_name: String,
 		 last_name: String,
-		 tag_id: Number,
+		 tag_id: String,
 		 password: String,
 		 role: String
 		  });
@@ -116,20 +121,47 @@ db.once('open', function callback () {
 		 last_name: String,
 		 tag_id: String,
 		 phone_number: String,
-		 address: String,
-		 prescriptions: [{name: String, dosage: String, interval: Number, intervalType: String}]
+		 address: String
+		 //prescriptions: [{name: String, dosage: String, interval: Number, intervalType: String}]
+		 }
+		 );
+
+	 var Prescription = createModel('prescription', {
+	 	 patient_id: ObjectId,
+		 drug_id: ObjectId,
+         amount: Number,
+         unit: String,
+         interval: Number,
+         intervalType: String,
+		 route: String
+		 }
+		 );
+
+	 var Route = createModel('route', {
+		 name: String
+		 }
+		 );
+
+	 var Unit = createModel('unit', {
+		 name: String
+		 }
+		 );
+
+	 var IntervalType = createModel('intervaltype', {
+		 name: String
 		 }
 		 );
 
 	 var Drug = createModel('drug', {
 			name: String,
-			brand: String
+			brand: String,
+			tag_id: String
 		 }
 		 );
 
 	 var Dose = createModel('dose', {
-		 drug_id: ObjectId,
 		 patient_id: ObjectId,
+		 prescriptions:[{prescription_id: ObjectId}],
 		 timestamp: Date,
 		 note: String,
 		 tag_id: String,
@@ -142,7 +174,9 @@ db.once('open', function callback () {
 		 floor: Number,
 		 department: String,
 		 occupant: ObjectId,
-		 tag_id: String
+		 tag_id: String,
+		 x: Number,
+		 y: Number
 		 }
 		 );
 
