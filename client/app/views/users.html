@@ -1,0 +1,47 @@
+<div class="add-user">
+  <div ng-class="{hide: !addUserOpen}">
+    <a ng-click="addUserOpen = false">Cancel Add New User</a>
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" ng-model="userName" placeholder="Name">
+      </div>
+      <div class="col-md-2">
+        <input type="text" ng-model="userTitle" placeholder="Title">
+      </div>
+      <div class="col-md-2">
+        <span ng-click="create()" class="btn btn-mini btn-primary">Create User</span>
+      </div>
+    </div>
+  </div>
+  <div ng-class="{hide: addUserOpen === true}">
+    <a ng-click="addUserOpen = true">Add New User</a>
+  </div>
+</div>
+
+<div class="row header-row">
+	<span class="col-md-2">Name</span>
+	<span class="col-md-2">Title</span>
+</div>
+
+<div ng-repeat="user in users" class="row user-row">
+  <div ng-class="{hide: user.editActive === true}">
+  	<span class="col-md-2">{{user.name}}</span>
+  	<span class="col-md-2">{{user.title}}</span>
+    <div class="col-md-2">
+      <span ng-click="user.editActive = true" class="btn btn-mini btn-default">Edit</span>
+      <span ng-click="delete(user)" class="btn btn-mini btn-danger">Delete</span>
+    </div>
+  </div>
+  <div ng-class="{hide: !user.editActive}">
+    <div class="col-md-2">
+      <input type="text" ng-model="user.name">
+    </div>
+    <div class="col-md-2">
+      <input type="text" ng-model="user.title">
+    </div>
+    <div class="col-md-2">
+      <span ng-click="user.editActive = false" class="btn btn-mini btn-default">Cancel</span>
+      <span ng-click="update(user)" class="btn btn-mini btn-success">Save</span>
+    </div>
+  </div>
+</div>
