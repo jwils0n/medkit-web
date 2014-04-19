@@ -1,0 +1,33 @@
+@import 'variables.less';
+@import 'mixins.less';
+
+a {
+  cursor: pointer;
+}
+
+h3 .glyphicon {
+	font-size: 20px;
+}
+
+.btn.btn-mini {
+  padding: 2px 8px;
+}
+
+.nav {
+	margin-top: 10px;
+}
+
+.header-row {
+  background: @lightGrey;
+  color: @black;
+  border: 1px solid @grey;
+  margin-bottom: 2px;
+  padding: 6px 0;
+  .borderRadius(3px, 3px, 0, 0);
+
+  > span:hover {
+    cursor: pointer;
+  }
+}
+
+@import 'users.less';
