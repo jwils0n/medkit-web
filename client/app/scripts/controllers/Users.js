@@ -2,31 +2,33 @@
 
 angular.module('clientApp')
   .controller('UsersCtrl', function ($scope) {
+    $scope.add = { role: -1 };
+    $scope.sorter = 'login';
+
     $scope.users = [
-      { name: 'James', title: 'Bossman'},
-      { name: 'Diego', title: 'Bossman'},
-      { name: 'Kent', title: 'Bossman'}
+      { login: 'jwilson', password: '123', first: 'James', last: 'Wilson', role: 'admin'},
+      { login: 'dnetto', password: '123', first: 'Deigo', last: 'Netto', role: 'nurse'},
+      { login: 'kgillenwater', password: '123', first: 'Kent', last: 'Gillenwater', role: 'doctor'}
     ];
 
     $scope.create = function () {
-      var data = {
-        name: $scope.userName,
-        title: $scope.userTitle
-      };
-
-      console.log('create', data);
+      $scope.users.push($scope.add);
+      $scope.add = { userRole: -1 };
     };
 
     $scope.update = function (user) {
       var data = {
-        name: user.name,
-        title: user.title
+        login: user.login,
+        password: user.password,
+        first: user.first,
+        last: user.last,
+        role: user.role
       };
 
       console.log('update', data);
     };
 
     $scope.delete = function (user) {
-
+      _.remove($scope.users, { login: user.login });
     };
   });

@@ -1,32 +1,28 @@
-<div class="add-user">
-  <div ng-class="{hide: !addUserOpen}">
-    <a ng-click="addUserOpen = false">Cancel Add New User</a>
-    <div class="row">
-      <div class="col-md-2">
-        <input type="text" ng-model="userName" placeholder="Name">
-      </div>
-      <div class="col-md-2">
-        <input type="text" ng-model="userTitle" placeholder="Title">
-      </div>
-      <div class="col-md-2">
-        <span ng-click="create()" class="btn btn-mini btn-primary">Create User</span>
-      </div>
-    </div>
-  </div>
-  <div ng-class="{hide: addUserOpen === true}">
-    <a ng-click="addUserOpen = true">Add New User</a>
-  </div>
-</div>
-
 <div class="row header-row">
-	<span class="col-md-2">Name</span>
-	<span class="col-md-2">Title</span>
+	<span ng-click="sorter = 'login'" class="col-md-2">
+    Login
+    <span ng-if="sorter === 'login'" class="glyphicon glyphicon-chevron-down"></span>
+  </span>
+  <span ng-click="sorter = 'password'" class="col-md-2">
+    Password
+    <span ng-if="sorter === 'password'" class="glyphicon glyphicon-chevron-down"></span>
+  </span>
+  <span ng-click="sorter = 'name'" class="col-md-4">
+    Name
+    <span ng-if="sorter === 'name'" class="glyphicon glyphicon-chevron-down"></span>
+  </span>
+  <span ng-click="sorter = 'role'" class="col-md-2">
+    Role
+    <span ng-if="sorter === 'role'" class="glyphicon glyphicon-chevron-down"></span>
+  </span>
 </div>
 
-<div ng-repeat="user in users" class="row user-row">
+<div ng-repeat="user in users | orderBy:sorter" class="row user-row">
   <div ng-class="{hide: user.editActive === true}">
-  	<span class="col-md-2">{{user.name}}</span>
-  	<span class="col-md-2">{{user.title}}</span>
+    <span class="col-md-2">{{user.login}}</span>
+    <span class="col-md-2">{{user.password}}</span>
+    <span class="col-md-4">{{user.first}} {{user.last}}</span>
+    <span class="col-md-2">{{user.role}}</span>
     <div class="col-md-2">
       <span ng-click="user.editActive = true" class="btn btn-mini btn-default">Edit</span>
       <span ng-click="delete(user)" class="btn btn-mini btn-danger">Delete</span>
@@ -34,14 +30,57 @@
   </div>
   <div ng-class="{hide: !user.editActive}">
     <div class="col-md-2">
-      <input type="text" ng-model="user.name">
+      <input type="text" ng-model="user.login">
     </div>
     <div class="col-md-2">
-      <input type="text" ng-model="user.title">
+      <input type="text" ng-model="user.password">
+    </div>
+    <div class="col-md-4">
+      <input type="text" ng-model="user.first">
+      <input type="text" ng-model="user.last">
+    </div>
+    <div class="col-md-2">
+      <select ng-model="user.role">
+        <option value="admin">Admin</option>
+        <option value="doctor">Doctor</option>
+        <option value="nurse">Nurse</option>
+      </select>
     </div>
     <div class="col-md-2">
       <span ng-click="user.editActive = false" class="btn btn-mini btn-default">Cancel</span>
       <span ng-click="update(user)" class="btn btn-mini btn-success">Save</span>
     </div>
+  </div>
+</div>
+
+<div class="add-user">
+  <div ng-class="{hide: !addUserOpen}">
+    <div class="row">
+      <div class="col-md-2">
+        <input type="text" ng-model="add.login" placeholder="Login">
+      </div>
+      <div class="col-md-2">
+        <input type="text" ng-model="add.password" placeholder="Password">
+      </div>
+      <div class="col-md-4">
+        <input type="text" ng-model="add.first" placeholder="First Name">
+        <input type="text" ng-model="add.last" placeholder="Last Name">
+      </div>
+      <div class="col-md-2">
+        <select ng-model="add.role">
+          <option value="-1">- Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="doctor">Doctor</option>
+          <option value="nurse">Nurse</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <span ng-click="addUserOpen = false" class="btn btn-mini btn-default">Cancel</span>
+        <span ng-click="create()" class="btn btn-mini btn-primary">Create</span>
+      </div>
+    </div>
+  </div>
+  <div ng-class="{hide: addUserOpen === true}">
+    <a ng-click="addUserOpen = true">Add New User</a>
   </div>
 </div>

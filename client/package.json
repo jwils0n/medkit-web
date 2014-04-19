@@ -31,7 +31,8 @@
     "karma": "^0.12.9",
     "karma-ng-html2js-preprocessor": "^0.1.0",
     "less": "^1.7.0",
-    "grunt-contrib-less": "^0.11.0"
+    "grunt-contrib-less": "^0.11.0",
+    "connect-modrewrite": "^0.5.11"
   },
   "engines": {
     "node": ">=0.10.0"
