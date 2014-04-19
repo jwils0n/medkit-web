@@ -6,6 +6,7 @@ var _ = require('lodash');
 mongoose.connect('mongodb://localhost/Medkit');
 var db = mongoose.connection;
 var ObjectId = Schema.ObjectId;
+var Mixed = Schema.Types.Mixed;
 
 
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -21,6 +22,8 @@ db.once('open', function callback () {
 	var API = {};
 
 	var Models = [];
+
+	
 	
 	var createModel = function(name, schema)
 	 {
@@ -49,22 +52,25 @@ db.once('open', function callback () {
             console.log("Debug PUT");
             console.log(req.params);
             console.log(id);
+            Event.broadcast(model.modelName, req.params, "PUT");
 			model.update({_id: id}, req.params, options, function(err, result){
 
 				if(err)
 				{
 					console.log(err);
 				}
-				io.sockets.emit(model.modelName , {obj: req.params, method: 'PUT', model: model.modelName});
+
+				
 				res.send(200);
 			});
 
 		}
 
 		model.routes.del["/:id"] = function(req, res, next){
+			Event.broadcast(model.modelName, req.params, "DELETE");
 			model.findById(req.params.id, function (err, result) {
 				result.remove();
-				io.sockets.emit(model.modelName , {obj: req.params, method: 'DEL', model: model.modelName});
+				
 				res.send(200);
 			});
 
@@ -81,10 +87,13 @@ db.once('open', function callback () {
 		model.routes.post[""] = function (req, res, next) {
 		console.log("Debug POST");
         console.log(req.params);
+
+				
+
 		var obj = new model(req.params).save(function(err){
 			console.log(err);
 		});
-		io.sockets.emit(model.modelName , {obj: req.params, method: 'POST', model: model.modelName});
+		Event.broadcast(model.modelName, req.params, "POST");
 		res.send(200);
 		}
 
@@ -192,9 +201,24 @@ db.once('open', function callback () {
 
 	var Event = createModel('event', {
 		 event_type: String,
+		 model: String,
 		 tag_id: Number,
-		 data: Number
-		  }, broadcast);
+		 data: Mixed,
+		 timestamp: Date
+		  });
+
+	Event.broadcast = function(modelName, params, method)
+	{
+			var ev = new Event({
+							 event_type: "POST",
+							 tag_id: params.tag_id,
+							 data: params,
+							 timestamp: new Date(),
+							 model: modelName
+							  });
+					ev.save();
+			io.sockets.emit(modelName , ev);
+	}
 
 
 	console.log("User Model Defined");
