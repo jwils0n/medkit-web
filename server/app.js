@@ -52,7 +52,7 @@ db.once('open', function callback () {
             console.log("Debug PUT");
             console.log(req.params);
             console.log(id);
-            Event.broadcast(model.modelName, req.params, "PUT");
+            //Event.broadcast(model.modelName, req.params, "PUT");
             var broadcast = Event.broadcast;
             var params = req.params;
             model.findById(id, function (err, result) {
@@ -211,7 +211,7 @@ db.once('open', function callback () {
 	Event.broadcast = function(modelName, params, method)
 	{
 			var ev = new Event({
-							 event_type: "POST",
+							 event_type: method,
 							 tag_id: params.tag_id,
 							 data: params,
 							 timestamp: new Date(),
