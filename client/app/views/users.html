@@ -7,9 +7,9 @@
     Password
     <span ng-if="sorter === 'password'" class="glyphicon glyphicon-chevron-down"></span>
   </span>
-  <span ng-click="sorter = 'name'" class="col-md-4">
+  <span ng-click="sorter = 'first_name'" class="col-md-4">
     Name
-    <span ng-if="sorter === 'name'" class="glyphicon glyphicon-chevron-down"></span>
+    <span ng-if="sorter === 'first_name'" class="glyphicon glyphicon-chevron-down"></span>
   </span>
   <span ng-click="sorter = 'role'" class="col-md-2">
     Role
@@ -19,9 +19,9 @@
 
 <div ng-repeat="user in users | orderBy:sorter" class="row user-row">
   <div ng-class="{hide: user.editActive === true}">
-    <span class="col-md-2">{{user.login}}</span>
+    <span class="col-md-2">{{user.username}}</span>
     <span class="col-md-2">{{user.password}}</span>
-    <span class="col-md-4">{{user.first}} {{user.last}}</span>
+    <span class="col-md-4">{{user.first_name}} {{user.last_name}}</span>
     <span class="col-md-2">{{user.role}}</span>
     <div class="col-md-2">
       <span ng-click="user.editActive = true" class="btn btn-mini btn-default">Edit</span>
@@ -30,14 +30,14 @@
   </div>
   <div ng-class="{hide: !user.editActive}">
     <div class="col-md-2">
-      <input type="text" ng-model="user.login">
+      <input type="text" ng-model="user.username">
     </div>
     <div class="col-md-2">
       <input type="text" ng-model="user.password">
     </div>
     <div class="col-md-4">
-      <input type="text" ng-model="user.first">
-      <input type="text" ng-model="user.last">
+      <input type="text" ng-model="user.first_name">
+      <input type="text" ng-model="user.last_name">
     </div>
     <div class="col-md-2">
       <select ng-model="user.role">
@@ -57,14 +57,14 @@
   <div ng-class="{hide: !addUserOpen}">
     <div class="row">
       <div class="col-md-2">
-        <input type="text" ng-model="add.login" placeholder="Login">
+        <input type="text" ng-model="add.username" placeholder="Username">
       </div>
       <div class="col-md-2">
         <input type="text" ng-model="add.password" placeholder="Password">
       </div>
       <div class="col-md-4">
-        <input type="text" ng-model="add.first" placeholder="First Name">
-        <input type="text" ng-model="add.last" placeholder="Last Name">
+        <input type="text" ng-model="add.first_name" placeholder="First Name">
+        <input type="text" ng-model="add.last_name" placeholder="Last Name">
       </div>
       <div class="col-md-2">
         <select ng-model="add.role">
