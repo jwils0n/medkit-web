@@ -192,13 +192,6 @@ db.once('open', function callback () {
 
 	 
 
-
-	var broadcast = function(obj)
-	{
-		console.log("Broadcast: " + obj);
-		socket.emit('events', obj);
-	}
-
 	var Event = createModel('event', {
 		 event_type: String,
 		 model: String,

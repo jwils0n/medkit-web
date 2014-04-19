@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DashboardCtrl', function ($scope, $q, Room, Patient, Dose, Prescription, Socket) {
+  .controller('DashboardCtrl', function ($scope, $q, Room, Patient, Dose, Prescription, Socket, Event) {
     var patientsDeferred = $q.defer();
     var prescriptionsDeferred = $q.defer();
     var dosesDeferred = $q.defer();
     var roomsDeferred = $q.defer();
+    var eventsDeferred = $q.defer();
 
     Patient.get({}, function (data) {
       $scope.patients = data;
@@ -27,11 +28,20 @@ angular.module('clientApp')
       roomsDeferred.resolve();
     });
 
+    Event.get({}, function (data) {
+      $scope.events = data;
+      $scope.eventFeed = data;
+      console.log("Events: ")
+      console.log(data);
+      eventsDeferred.resolve();
+    });
+
     $q.all([
       patientsDeferred.promise,
       prescriptionsDeferred.promise,
       dosesDeferred.promise,
-      roomsDeferred.promise
+      roomsDeferred.promise,
+      eventsDeferred.promise
     ]).then(function () {
       _.forEach($scope.rooms, function (room) {
         room.number = parseInt(room._id.substr(room._id.length - 2),16) 
@@ -76,6 +86,8 @@ angular.module('clientApp')
     Socket.on('event', eventFeedHandler);
     Socket.on('patient', eventFeedHandler);
     Socket.on('dose', eventFeedHandler);
+    Socket.on('prescription', eventFeedHandler);
+    Socket.on('room', eventFeedHandler);
 
     function eventFeedHandler (data) {
       var formats = {
@@ -87,6 +99,12 @@ angular.module('clientApp')
         },
         event: function (data) {
           return 'An event was triggered?';
+        },
+        prescription: function(data){
+          return "A new prescription has been created";
+        },
+        room: function(date){
+          return "Room has updated";
         }
       };
 
