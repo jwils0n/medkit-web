@@ -5,8 +5,8 @@
         <span class="glyphicon glyphicon-list"></span> 
         Event Feed
       </div>
-      <div class="panel-body">
-        <p ng-repeat="event in eventFeed">
+      <div class="panel-body events-body">
+        <p ng-repeat="event in eventFeed" class="{{event.model}}">
           {{event.msg}}
           <span class="event-timestamp">{{event.time}}</span>
         </p>
@@ -19,9 +19,11 @@
           <span class="glyphicon glyphicon-dashboard"></span> 
           Statistics
         </div>
-        <div class="panel-body">
+        <div class="panel-body summary-body">
           <p><span class="large">{{patients.length}}</span> patients are checked in</p>
-          <p></p>
+          <p><span class="large">{{filledDoses.length}}</span> prescriptions filled today</p>
+          <p><span class="large">{{unfilledDoses.length}}</span> prescriptions administered today</p>
+
         </div>
       </div>
     </div>
@@ -238,35 +240,28 @@
             </svg>
           </div>
 
-          <div ng-class="{hide:activeMode !== 'patients'}" class="panel-body">
-          patients
+          <div ng-class="{hide:activeMode !== 'patients'}" class="panel-body patients-body">
+            <div ng-repeat="patient in patients">
+              <p>
+                {{patient.first_name}} {{patient.last_name}}
+                <span class="pull-right" ng-if="patient.tag_id">Tag #: {{patient.tag_id}}</span>
+              </p>
+              <div ng-if="patient.prescriptions.length > 0" class="prescriptions">
+                <p class="row">
+                  <span class="col-md-1"></span>
+                  <span class="col-md-4 prescriptions-label">Prescriptions:</span>
+                </p>
+                <p ng-repeat="prescription in patient.prescriptions" class="patient-prescriptions row">
+                  <span class="col-md-1"></span>
+                  <span class="col-md-4">Drug: {{prescription.drug_id}}</span>
+                  <span class="col-md-3">Interval: {{prescription.interval}}</span>
+                  <span class="col-md-4">Amount: {{prescription.amount}}</span>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    
-    <!-- <div class="panel">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <span class="glyphicon glyphicon-warning-sign"></span> 
-          Alerts
-        </div>
-        <div class="panel-body">
-          body
-        </div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <span class="glyphicon glyphicon-dashboard"></span> 
-          Statistics
-        </div>
-        <div class="panel-body">
-          body
-        </div>
-      </div>
-    </div> -->
   </div>
 </div>

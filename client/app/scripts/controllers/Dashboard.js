@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientApp')
-  .controller('DashboardCtrl', function ($scope, $q, Room, Patient, Dose, Prescription, Socket) {
+  .controller('DashboardCtrl', function ($scope, $q, Event, Room, Patient, Dose, Prescription, Socket) {
     var patientsDeferred = $q.defer();
     var prescriptionsDeferred = $q.defer();
     var dosesDeferred = $q.defer();
@@ -60,6 +60,18 @@ angular.module('clientApp')
           }
         }
       });
+
+      _.forEach($scope.prescriptions, function (prescription) {
+        var patient = $scope.getPatientById(prescription.patient_id);
+
+        if (!patient.prescriptions) {
+          patient.prescriptions = [];
+        }
+        patient.prescriptions.push(prescription);
+      });
+
+      $scope.filledDoses = _.filter($scope.doses, { state: 'Filled'});
+      $scope.unfilledDoses = _.filter($scope.doses, { state: 'Administered'});
     });
 
     $scope.getPatientById = function (id) {
@@ -70,23 +82,37 @@ angular.module('clientApp')
       return _.find($scope.prescriptions, { _id: id });
     };
 
-    $scope.eventFeed = [];
     $scope.activeMode = 'map';
+    $scope.eventFeed = [];
+
+    Event.get({}, function (data) {
+      _.forEach(data, function (event) {
+        eventFeedHandler(event);
+      });
+    });
 
     Socket.on('event', eventFeedHandler);
     Socket.on('patient', eventFeedHandler);
     Socket.on('dose', eventFeedHandler);
 
-    function eventFeedHandler (data) {
+    function eventFeedHandler (resp) {
       var formats = {
         patient: function (data) {
-          return 'Patient ' + data.first_name + ' ' + data.last_name + ' was ' + data.method;
+          return 'Patient ' + data.first_name + ' ' + data.last_name + ' was ' + data.type;
         },
         dose: function (data) {
-          return 'A dose was administered';
+          var patient = $scope.getPatientById(data.patient_id);
+          return 'A prescription was filled for ' + patient.first_name + ' ' + patient.last_name;
         },
         event: function (data) {
           return 'An event was triggered?';
+        },
+        user: function (data) {
+          return 'User ' + data.first_name + ' ' + data.last_name + ' was ' + data.type;
+        },
+        prescription: function (data) {
+          var patient = $scope.getPatientById(data.patient_id);
+          return 'A prescription was ' + data.type + ' for ' + patient.first_name + ' ' + patient.last_name;
         }
       };
 
@@ -96,11 +122,21 @@ angular.module('clientApp')
         DELETE: 'removed'
       };
 
-      data.obj.method = methods[data.method];
-      $scope.eventFeed.push({
-        msg: formats[data.model](data.obj),
-        time: moment().format('h:mm a')
+      if (!resp.model) {
+        return;
+      }
+
+      resp.data.type = methods[resp.event_type];
+
+      $scope.eventFeed.unshift({
+        msg: formats[resp.model](resp.data),
+        time: moment(resp.timestamp).format('h:mm a'),
+        model: resp.model
       });
+
+      if ($scope.eventFeed.length > 20) {
+        $scope.eventFeed.pop();
+      }
     }
 
   });

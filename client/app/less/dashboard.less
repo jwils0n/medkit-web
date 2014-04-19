@@ -1,9 +1,3 @@
-.event-timestamp {
-  display: block;
-  font-style: italic;
-  font-size: 11px;
-  color: @grey;
-}
 
 .large {
   font-size: 30px;
@@ -12,19 +6,87 @@
   color: @darkGrey;
 }
 
+.events-body {
+  height: 254px;
+  padding: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  p {
+    font-size: 11px;
+    line-height: 12px;
+    padding: 5px;
+    margin-bottom: 5px;
+
+    &.dose {
+      background: #FCC;
+    }
+
+    &.prescription {
+      background: #FCC;
+    }
+
+    &.patient {
+      background: #CCF;
+    }
+
+    &.user {
+      background: #CFC;
+    }
+  }
+
+  .event-timestamp {
+    display: block;
+    font-style: italic;
+    font-size: 11px;
+    color: @white;
+    text-align: right;
+  }
+}
+
 .panel-body-wrapper {
   position: relative;
 
   .display-mode {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -30px;
+    right: 15px;
     z-index: 990;
 
     li {
       display: inline;
-      margin-left: 15px;
+      margin-left: 8px;
     }
+  }
+}
+
+.summary-body {
+  font-size: 13px;
+}
+
+.patients-body {
+  > div {
+    font-size: 12px;
+    border-bottom: 1px solid @grey;
+    padding: 3px 0 2px;
+    text-indent: 3px;
+
+    &:nth-child(odd) {
+      background-color: @lightGrey;
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+
+  .prescriptions-label {
+    color: @darkGrey;
+    font-weight: bold;
+  }
+
+  .prescriptions {
+    font-size: 12px!important;
   }
 }
 
