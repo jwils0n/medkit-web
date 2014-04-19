@@ -6,6 +6,7 @@ angular.module('clientApp')
     var prescriptionsDeferred = $q.defer();
     var dosesDeferred = $q.defer();
     var roomsDeferred = $q.defer();
+    var eventsDeferred = $q.defer();
 
     Patient.get({}, function (data) {
       $scope.patients = data;
@@ -27,11 +28,20 @@ angular.module('clientApp')
       roomsDeferred.resolve();
     });
 
+    Event.get({}, function (data) {
+      $scope.events = data;
+      $scope.eventFeed = data;
+      console.log("Events: ")
+      console.log(data);
+      eventsDeferred.resolve();
+    });
+
     $q.all([
       patientsDeferred.promise,
       prescriptionsDeferred.promise,
       dosesDeferred.promise,
-      roomsDeferred.promise
+      roomsDeferred.promise,
+      eventsDeferred.promise
     ]).then(function () {
       _.forEach($scope.rooms, function (room) {
         room.number = parseInt(room._id.substr(room._id.length - 2),16) 
@@ -94,6 +104,8 @@ angular.module('clientApp')
     Socket.on('event', eventFeedHandler);
     Socket.on('patient', eventFeedHandler);
     Socket.on('dose', eventFeedHandler);
+    Socket.on('prescription', eventFeedHandler);
+    Socket.on('room', eventFeedHandler);
 
     function eventFeedHandler (resp) {
       var formats = {
@@ -113,6 +125,9 @@ angular.module('clientApp')
         prescription: function (data) {
           var patient = $scope.getPatientById(data.patient_id);
           return 'A prescription was ' + data.type + ' for ' + patient.first_name + ' ' + patient.last_name;
+        },
+        room: function(date){
+          return "Room has updated";
         }
       };
 
