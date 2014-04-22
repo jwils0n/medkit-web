@@ -5,7 +5,8 @@
   "dependencies": {
     "mongoose": "3.x.x",
     "restify": "2.x.x",
-    "socket.io": "x.x.x"
+    "socket.io": "x.x.x",
+    "lodash": "x.x.x"
   },
   "engine": "node >= 0.10.26"
 }
