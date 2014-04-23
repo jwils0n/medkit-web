@@ -2,7 +2,7 @@
 
 angular.module('clientApp')
   .factory('Socket', function ($rootScope) {
-    var socket = io.connect('http://192.168.1.148:8080');
+    var socket = io.connect('http://medkit-api.blacklitelabs.com');
     var registeredChannels = [];
     return {
       on: function (eventName, callback) {
