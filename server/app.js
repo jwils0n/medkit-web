@@ -8,6 +8,7 @@ var db = mongoose.connection;
 var ObjectId = Schema.ObjectId;
 var Mixed = Schema.Types.Mixed;
 
+var PORT = process.env.PORT || 8080;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
@@ -338,7 +339,7 @@ db.once('open', function callback () {
 	//server.post('/user', User.post);
 
 
-	server.listen(8080, function () {
+	server.listen(PORT, function () {
 	  console.log('%s listening at %s', server.name, server.url)
 	})
 });

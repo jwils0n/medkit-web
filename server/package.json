@@ -2,6 +2,10 @@
   "name": "medkit-web-api",
   "description": "Backend API server for MedKit",
   "author": "kent.gillenwater@gmail.com",
+  "scripts": {
+    "start": "PORT=10001 forever -a -l medkit-api.log -o /home/ubuntu/.forever/medkit/out.log -e /home/ubuntu/.forever/medkit/err.log start app.js",
+    "stop": "forever stop app.js"
+  },
   "dependencies": {
     "lodash": "^2.4.1",
     "mongoose": "^3.8.8",
