@@ -1,0 +1,12 @@
+{
+  "name": "medkit-web-api",
+  "description": "Backend API server for MedKit",
+  "author": "kent.gillenwater@gmail.com",
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "mongoose": "^3.8.8",
+    "restify": "^2.7.0",
+    "socket.io": "^0.9.16"
+  },
+  "engine": "node >= 0.10.26"
+}
