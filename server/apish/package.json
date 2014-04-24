@@ -7,7 +7,8 @@
     "restify": "2.x.x",
     "socket.io": "x.x.x",
     "lodash": "x.x.x",
-	  "nodeunit": "x.x.x"
+	  "nodeunit": "x.x.x",
+    "js-beautify": "1.4.2"
   },
   "engine": "node >= 0.10.26"
 }

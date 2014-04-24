@@ -8,7 +8,7 @@ var db = mongoose.connection;
 var ObjectId = Schema.ObjectId;
 var Mixed = Schema.Types.Mixed;
 var _ = require('lodash');
-
+var beautify = require('js-beautify').js_beautify;
 
 exports.models = [];
 
@@ -139,6 +139,7 @@ exports.broadcast = function(modelName, params, method)
 			exports.io.sockets.emit(modelName , ev);
 	}
 
+
 exports.initialize = function(server, connection, callback)
 {
 			mongoose.connect(connection);
@@ -151,12 +152,16 @@ exports.initialize = function(server, connection, callback)
 				  	db.close();
 				  });
 
+		    
+
 			exports.models.forEach(function(model) {
 
 		      var modelName = model.modelName;
 			  exports.API[modelName] = {};
 			  exports.API[modelName].meta = exports.getMeta(model);
 			  exports.API[modelName].GET = [];
+
+
 			  for(route in model.routes.get)
 			  {
 			  	console.log("Adding GET Route: " + "/" + model.modelName + route);
@@ -189,11 +194,53 @@ exports.initialize = function(server, connection, callback)
 			  }
 
 
-			  server.get('/api', function (req, res, next) {
-			     res.send(exports.API);
+			  
 			})
 
-			});
+              server.get('/api', function (req, res, next) {
+			     res.send(exports.API);
+			   });
+
+			  
+			  server.get('/js/:moduleName/api-angular.js', function(req, res, next){
+			  	res.setHeader('content-type', 'text/javascript');
+			  	console.log(req.headers);
+			  	//res.send(angular_js);
+
+		        var template = "angular.module('<%= moduleName %>')"
+			  	               + ".factory('<%= modelName %>', function ($resource) {"
+			  	               	+ "return $resource('//<%= host %>/<%= modelName %>/:id', { id:'@id' }, {"
+			  	               		+ "get: { isArray: true },"
+			  	               		+ "update: { method: 'PUT' },"
+			  	               		+ "remove: { method: 'DELETE' }"
+			  	               		+ " }); });"
+
+			    var compiled = _.template(template);
+			    var angular_js = "use strict;";
+
+			  	exports.models.forEach(function(model) {
+
+			  			angular_js+= compiled({modelName: model.modelName,
+			                         host: req.headers.host,
+			                         moduleName: req.params.moduleName});
+			  	})
+
+			  	res.send(beautify(angular_js));
+
+
+					  	/*'use strict';
+						angular.module('clientApp')
+						  .factory('Patient', function ($resource) {
+						    return $resource('//medkit-api.blacklitelabs.com/patient/:id', { id:'@id' }, {
+						      get: { isArray: true },
+						      update: { method: 'PUT' },
+						      remove: { method: 'DELETE' }
+						    });
+						  });
+						*/
+			  });
+
+			
 
 			if(callback)
 			callback();
