@@ -20,16 +20,21 @@ module.exports = {
 		server.use(restify.queryParser());
 		server.use(restify.bodyParser());
 		console.log("Initializing APISH");
+
+		var TestModel = apish.model('testmodel', {
+		 name: String
+		  });
+
+
 		apish.initialize(server, test_database, function(){
 			server.listen(8080, callback);
 });
-    },
+    }, 
     tearDown: function (callback) {
     	server.close();
         callback();
     },
-    test1: function(test){
-		console.log("test1");
+    test: function(test){
 		test.done();
 	}
 }
