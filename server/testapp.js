@@ -1,5 +1,5 @@
 var restify = require('restify');
-var mongiofy = require('./mongiofy/mongiofy');
+var apish = require('./apish/apish');
 
 var server = restify.createServer({ name: 'my-api' });
 server.use(restify.acceptParser(server.acceptable));
@@ -9,11 +9,11 @@ server.use(restify.bodyParser());
 
 
 
-var TestModel = mongiofy.model('testmodel', {
+var TestModel = apish.model('testmodel', {
 		 name: String
 		  });
 
-mongiofy.initialize(server, 'mongodb://localhost/test');
+apish.initialize(server, 'mongodb://localhost/test');
 
 server.listen(8080, function () {
 	  console.log('%s listening at %s', server.name, server.url)

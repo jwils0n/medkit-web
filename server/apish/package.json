@@ -1,12 +1,13 @@
 {
-  "name": "Mongiofy",
+  "name": "apish",
   "description": "A quick binding of mongoose, restify, and socket io",
   "author": "kent.gillenwater@gmail.com",
   "dependencies": {
     "mongoose": "3.x.x",
     "restify": "2.x.x",
     "socket.io": "x.x.x",
-    "lodash": "x.x.x"
+    "lodash": "x.x.x",
+	  "nodeunit": "x.x.x"
   },
   "engine": "node >= 0.10.26"
 }

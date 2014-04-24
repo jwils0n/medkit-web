@@ -14,9 +14,14 @@ exports.models = [];
 
 exports.API = {};
 
-exports.model = function(name, schema)
+exports.model = function(name, schema, options)
 	 {
 	 	var model = mongoose.model(name, schema);
+	 	model.create = {pre: [], on: [], post: []};
+	 	model.update = {pre: [], on: [], post: []};
+	 	model.read = {pre: [], on: [], post: []};
+	 	model.del = {pre: [], on: [], post: []};
+
 	 	exports.models.push(model);
 	 	model.rawSchema = schema;
 	 	model.routes = {get:{}, post:{}, put:{}, del:{}};
@@ -26,12 +31,13 @@ exports.model = function(name, schema)
 
 		model.routes.get["/:id"] = function(req, res, next){
 			model.findById(req.params.id, function (err, result) {
+
 				res.send(result);
 			});
 		}
 
 		model.routes.put["/:id"] = function(req, res, next){
-			var options = { multi: false };
+			var update_options = { multi: false };
           
             var id = req.params.id;
             delete req.params.id;
@@ -41,12 +47,11 @@ exports.model = function(name, schema)
             console.log(req.params);
             console.log(id);
             //Event.broadcast(model.modelName, req.params, "PUT");
-            var broadcast = Event.broadcast;
             var params = req.params;
             model.findById(id, function (err, result) {
             		var previous = result;
 
-	            	model.update({_id: id}, params, options, function(err, result){
+	            	model.update({_id: id}, params, update_options, function(err, result){
 					if(err)
 					{
 						console.log(err);
@@ -134,12 +139,17 @@ exports.broadcast = function(modelName, params, method)
 			exports.io.sockets.emit(modelName , ev);
 	}
 
-exports.initialize = function(server, connection)
+exports.initialize = function(server, connection, callback)
 {
 			mongoose.connect(connection);
 			exports.io = socketio.listen(server);
 			db.on('error', console.error.bind(console, 'connection error:'));
-		    db.once('open', function callback () {
+		    db.once('open', function() {
+
+		    	server.on("close", function() {
+				  	console.log("Closing Mongo Connection")
+				  	db.close();
+				  });
 
 			exports.models.forEach(function(model) {
 
@@ -184,5 +194,8 @@ exports.initialize = function(server, connection)
 			})
 
 			});
+
+			if(callback)
+			callback();
 	});
 }
