@@ -2,6 +2,7 @@ module.exports = {};
 var exports = module.exports;
 var restify = require('restify');
 var mongoose = require('mongoose');
+exports.Schema = mongoose.Schema;
 var Schema = mongoose.Schema;
 var socketio = require('socket.io');
 var db = mongoose.connection;
@@ -11,8 +12,43 @@ var _ = require('lodash');
 var beautify = require('js-beautify').js_beautify;
 
 exports.models = [];
+exports.models_map = {};
 
 exports.API = {};
+
+exports.getMeta = function(model)
+	 {
+	 	var out = {};
+
+	 	for(field in model.schema.paths)
+	 	{
+	 		var path =  model.schema.paths[field];
+	 		if(path.instance)
+	 			out[field] = path.instance;
+
+	 		if(path.schema)
+	 			out[field] = getMeta(path);
+	 	}
+	 	return out;
+	 }
+
+exports.getExpansions = function(model)
+{
+	var out = [];
+
+	 	for(field in model.schema.paths)
+	 	{
+	 		console.log()
+	 		var path =  model.schema.paths[field];
+	 		console.log(path);
+	 		if(path.caster)
+	 		{
+	 			out.push(field);
+	 		}
+	 	}
+	 	return out;
+}
+
 
 exports.model = function(name, schema, options)
 	 {
@@ -30,10 +66,33 @@ exports.model = function(name, schema, options)
 		}
 
 		model.routes.get["/:id"] = function(req, res, next){
-			model.findById(req.params.id, function (err, result) {
+			console.log("GET");
+
+			var expand = req.params.expand;
+            delete req.params.expand;
+
+            var expansions = exports.getExpansions(model);
+            if(expand && expansions.length > 0)
+            {
+            	
+            	console.log("Expanding: ");
+            	console.log(expansions);
+            	console.log("JOIN");
+            	console.log(_(expansions).join(" "));
+
+            	model.findById(req.params.id).populate(_(expansions).join(" ")).exec(function (err, result) {
+				res.send(result);
+			    })
+            }
+            else
+            {
+            	model.findById(req.params.id, function (err, result) {
 
 				res.send(result);
-			});
+			    });
+            }
+
+			
 		}
 
 		model.routes.put["/:id"] = function(req, res, next){
@@ -80,9 +139,27 @@ exports.model = function(name, schema, options)
 
 
 		model.routes.get[""] = function(req, res, next){
-			model.find(req.params, function (err, result) {
+
+			var expand = req.params.expand;
+            delete req.params.expand;
+
+            var expansions = exports.getExpansions(model);
+            if(expand && expansions.length > 0)
+            {
+            	
+
+            	model.find(req.params).populate(_(expansions).join(" ")).exec(function (err, result) {
 				res.send(result);
-			});
+			    })
+            }
+            else
+            {
+            	model.find(req.params, function (err, result) {
+				res.send(result);
+				});
+            }
+
+			
 		}
 
 		model.routes.post[""] = function (req, res, next) {
@@ -101,21 +178,6 @@ exports.model = function(name, schema, options)
 	 	return model;
 	 }
 
-exports.getMeta = function(model)
-	 {
-	 	var out = {};
-
-	 	for(field in model.schema.paths)
-	 	{
-	 		var path =  model.schema.paths[field];
-	 		if(path.instance)
-	 			out[field] = path.instance;
-
-	 		if(path.schema)
-	 			out[field] = getMeta(path);
-	 	}
-	 	return out;
-	 }
 
 
 exports.event = exports.model('event', {
@@ -221,7 +283,9 @@ exports.initialize = function(server, connection, callback)
 			  	               		+ "'get': { method: 'GET'},"
 			  	               		+ "'query':  {method:'GET', isArray:true},"
 			  	               		+ "'update': { method: 'PUT' },"
-			  	               		+ "'remove': { method: 'DELETE' }"
+			  	               		+ "'remove': { method: 'DELETE' },"
+			  	               		+ "'getExpanded': { method: 'GET', params: {expand: true} },"
+			  	               		+ "'queryExpanded': { method: 'GET', params: {expand: true} isArray:true}"
 			  	               		+ " }); });"
 
 			    var compiled = _.template(template);
