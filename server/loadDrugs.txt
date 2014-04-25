@@ -1,0 +1,1 @@
+mongoimport --db Medkit --collection drugs --file drugs.json
