@@ -1,0 +1,20 @@
+{ "_id" : { "$oid" : "535209345afe3fdc2d99f92a" }, "name" : "ranitidine hcl", "brand" : "ZANTAC" }
+{ "_id" : { "$oid" : "535209735afe3fdc2d99f92c" }, "brand" : "Lipitor", "name" : "Lipitor" }
+{ "_id" : { "$oid" : "535209855afe3fdc2d99f92d" }, "brand" : "Nitroglycerin", "name" : "Nitroglycerin" }
+{ "_id" : { "$oid" : "535209ce5afe3fdc2d99f92e" }, "name" : "paroxetine hydrochloride", "brand" : "Paxil" }
+{ "_id" : { "$oid" : "535209ef5afe3fdc2d99f92f" }, "name" : "escitalopram oxalate", "brand" : "Lexapro" }
+{ "_id" : { "$oid" : "53520a0b5afe3fdc2d99f930" }, "name" : "Xanax", "brand" : "Xanax" }
+{ "_id" : { "$oid" : "53520a3a5afe3fdc2d99f931" }, "name" : "Midazolam HCL", "brand" : "Midazolam HCL" }
+{ "_id" : { "$oid" : "53520a665afe3fdc2d99f932" }, "name" : "hydrocodone bitartrate", "brand" : "Vicodin" }
+{ "_id" : { "$oid" : "53520a7f5afe3fdc2d99f933" }, "name" : "pregabalin", "brand" : "LYRICA" }
+{ "_id" : { "$oid" : "53520b93770b5bfc51a82c82" }, "name" : "oxycodone and acetaminophen", "brand" : "Perocet" }
+{ "_id" : { "$oid" : "53520bb5770b5bfc51a82c83" }, "name" : "sertraline hydrochloride", "brand" : "Zoloft" }
+{ "_id" : { "$oid" : "53520be7770b5bfc51a82c84" }, "name" : "venlafaxine hydrochloride", "brand" : "Effexor" }
+{ "_id" : { "$oid" : "53520c02770b5bfc51a82c85" }, "name" : "zolpidem tartrate", "brand" : "Ambien" }
+{ "_id" : { "$oid" : "53520c1a770b5bfc51a82c86" }, "name" : "atenolol", "brand" : "Tenormin" }
+{ "_id" : { "$oid" : "53520c2c770b5bfc51a82c87" }, "name" : "bupropion hydrochloride", "brand" : "Wellbutrin" }
+{ "_id" : { "$oid" : "53520c38770b5bfc51a82c88" }, "name" : "acetaminophen", "brand" : "Tylenol" }
+{ "_id" : { "$oid" : "53520c44770b5bfc51a82c89" }, "name" : "aspirin", "brand" : "Bayer" }
+{ "_id" : { "$oid" : "53520c4f770b5bfc51a82c8a" }, "name" : "amlodipine besylate", "brand" : "Norvasc" }
+{ "_id" : { "$oid" : "53520c61770b5bfc51a82c8b" }, "name" : "esomeprazole magnesium", "brand" : "Nexium" }
+{ "_id" : { "$oid" : "53520ced5afe3fdc2d99f935" }, "name" : "duloxetine", "brand" : "Cymbalta" }
