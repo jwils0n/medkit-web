@@ -207,12 +207,21 @@ exports.initialize = function(server, connection, callback)
 			  	console.log(req.headers);
 			  	//res.send(angular_js);
 
+			  	/*{ 'get':    {method:'GET'},
+    			'save':   {method:'POST'},
+    			'query':  {method:'GET', isArray:true},
+    			'remove': {method:'DELETE'},
+    			'delete': {method:'DELETE'} };*/
+
 		        var template = "angular.module('<%= moduleName %>')"
 			  	               + ".factory('<%= modelName %>', function ($resource) {"
 			  	               	+ "return $resource('//<%= host %>/<%= modelName %>/:id', { id:'@id' }, {"
-			  	               		+ "get: { isArray: true },"
-			  	               		+ "update: { method: 'PUT' },"
-			  	               		+ "remove: { method: 'DELETE' }"
+			  	               		+ "'save':   {method:'POST'},"
+			  	               		+ "'delete': {method:'DELETE'},"
+			  	               		+ "'get': { method: 'GET'},"
+			  	               		+ "'query':  {method:'GET', isArray:true},"
+			  	               		+ "'update': { method: 'PUT' },"
+			  	               		+ "'remove': { method: 'DELETE' }"
 			  	               		+ " }); });"
 
 			    var compiled = _.template(template);
